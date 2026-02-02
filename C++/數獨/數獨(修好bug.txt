@@ -1,0 +1,237 @@
+#include <algorithm>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <random>
+#include <ctime>
+
+using namespace std;
+class Qwer
+{
+    public:
+    string b[10] = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    int a[9][9] = {0};
+    int level[3] = {38, 36, 30};
+    int x, y, c, leveln, game;
+
+    void open_game()
+    {
+        for (int i = 0; i < 27; i++)
+        {
+            cout << "=";
+        }
+        cout << endl << endl;
+        cout << "歡迎！請問要開始遊戲嗎？";
+        cout << endl << endl;
+        for (int i = 0; i < 27; i++)
+        {
+            cout << "=";
+        }
+        cout << endl << endl;
+        cout << "1.開始遊戲" << endl;
+        cout << "2.規則介紹" << endl;
+        cout << "0.退出遊戲" << endl;
+        cout << endl;
+        cout << "請做出你的選擇:" << endl;
+        abc(&game, 2, 0);
+        if(game == 2) asdq();
+        if(game)
+        {
+            qwe();
+        }
+    }
+
+    void qwe()
+    {
+        cout << "請選擇難度的1簡單、2是中等、3困難" << endl;
+        abc(&leveln, 3, 1);
+        leveln--;
+        fillBoard(0, 0);
+        ert();
+        while (endwin())
+        {
+            cout << "請輸入x的值範圍1~9的數字" << endl;
+            abc(&x, 9, 1);
+            x--;
+            cout << "請輸入y的值範圍1~9的數字" << endl;
+            abc(&y, 9, 1);
+            y--;
+            cout << "請輸入1~9的數字，刪除請按0" << endl;
+            abc(&c, 9, 0);
+            if (!asd() && a[y][x] / 10 == 0)
+            {
+                a[y][x] = c;
+                look();
+            }
+            else
+            {
+                cout << "你到底有沒有玩過數獨，去重新讀規則吧你" << endl;
+            }
+        }
+    }
+
+    bool asd()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            if (c != 0 && ((a[y][i] % 10 == c) || (a[i][x] % 10 == c) || (a[(y / 3) * 3 + (i / 3)][(x / 3) * 3 + (i % 3)] % 10 == c)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void ert()
+    {
+        int nu = 0;
+        while (nu != 81 - level[leveln])
+        {
+            x = rand() % 9;
+            y = rand() % 9;
+            if (a[y][x] != 0)
+            {
+                a[y][x] = 0;
+                nu++;
+            }
+        }
+        look();
+    }
+
+    void look()
+    {
+        cout <<"y\\x | ";
+        for (int n = 0; n < 9; n++)
+        {
+            cout << n + 1 << " | ";
+            if(n % 3 == 2 && n < 7) cout << "  | ";
+        }
+        cout << endl << endl;
+        for (int n = 0; n < 9; n++)
+        {
+            cout << n + 1 << "   | ";
+            for (int i = 0; i < 9; i++)
+            {
+                cout << b[a[n][i] % 10] << " | ";
+                if(i % 3 == 2 && i < 7) cout << "  | ";
+            }
+            if(n % 3 == 2 && n < 7)
+            {
+                cout << endl;
+                for (int i = 0; i < 49; i++)
+                {
+                    cout << "=";
+                }
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+
+    void abc(int *input, int b, int c)
+    {
+        string line;
+        while (true)
+        {
+            try
+            {
+                getline(cin, line);
+                stringstream ss(line);
+                if (!(ss >> *input) || (ss >> ws && !ss.eof()))
+                {
+                    throw runtime_error("輸入不是有效的整數！");
+                }
+                if (*input > b || *input < c)
+                {
+                    throw runtime_error("輸入值不在範圍內！");
+                }
+                break;
+            }
+            catch (const runtime_error &e)
+            {
+                cout << "錯誤：" << e.what() << " 請重新輸入。\n";
+            }
+        }
+    }
+
+    void asdq()
+    {
+        stringstream ss;
+        ifstream in("Game_rules.txt");
+        if (!in)
+        {
+            cerr << "無法開啟 Game_rules.txt 寫入！" << endl;
+            return;
+        }
+
+        string line;
+        while (getline(in, line))
+        {
+            cout << line << endl;
+        }
+        ss << in.rdbuf();
+        string str(ss.str());
+        cout << str;
+        in.close();
+
+        cout << "輸入0回上一頁" << endl;
+        abc(&game, 0, 0);
+        if(game == 0) open_game();
+    }
+
+    bool endwin()
+    {
+        for (int n = 0; n < 9; n++)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (a[n][i] == 0)
+                {
+                    return true;
+                }
+            }
+        }
+        cout << "恭喜玩完" << endl;
+        return false;
+    }
+
+    bool fillBoard(int row, int col)
+    {
+        if (row == 9) return true;
+        if (col == 9) return fillBoard(row + 1, 0);
+
+        vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        static random_device rd;
+        static mt19937 g(rd());
+        shuffle(nums.begin(), nums.end(), g);
+
+        for (int n : nums)
+        {
+            if (a[row][col] == 0)
+            {
+                x = col;
+                y = row;
+                c = n;
+                if (!asd())
+                {
+                    a[row][col] = n + 10;
+                    if (fillBoard(row, col + 1))
+                        return true;
+                    a[row][col] = 0;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+int main()
+{
+    srand((unsigned)time(0));
+    Qwer a;
+    a.open_game();
+}
