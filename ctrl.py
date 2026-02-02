@@ -1,0 +1,1 @@
+print("VSC案CTRL + `叫出終端")
