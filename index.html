@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>70% 比例調整頁面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .media-container {
+            /* 調整為螢幕寬度的 70% */
+            width: 70vw; 
+            /* 同步限制高度，避免在直向螢幕（手機）上超出上下邊界 */
+            max-height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img, video {
+            width: 100%;
+            height: auto;
+            /* 保持比例縮放 */
+            object-fit: contain; 
+            border-radius: 15px;
+            /* 加入一點點發光效果，讓圖片更有流螢那種質感 */
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="media-container">
+        <img src="https://media.tenor.com/9Z5KH05YJroAAAAC/clara-dance-clara-shikanoko.gif" alt="70% Width Content">
+    </div>
+
+</body>
+</html>
